@@ -82,6 +82,23 @@ body {
     <span style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776;</span>
     <!-- form -->
     <div class="container">
+    <?php   
+      if (isset($_GET['status'])) {
+        if ($_GET['status'] == "berhasil") {
+          ?>
+            <div class="alert alert-warning" role="alert">
+              Data berhasil masuk
+            </div>
+          <?php
+        } else {
+          ?>
+            <div class="alert alert-warning" role="alert">
+            Data gagal masuk
+            </div>
+          <?php
+        }        
+      }
+    ?>
     <div class="card" >
     <div class="card-body" style="margin-left: 200px; margin-right: 200px; margin-top:50px;">
             <form action="function_anggaran.php" method="POST" >
@@ -92,7 +109,7 @@ body {
                 </div>
                 <div class="form-group">
                     <label for="income_budget">Income Budget</label>
-                    <input type="text" name="income_budget" id="income_budget" class="form-control" autofocus autocomplete="off" required>
+                    <input type="number" name="income_budget" id="income_budget" class="form-control" autofocus autocomplete="off" required>
                 </div>
                 <div class="form-group">
                     <label for="intended_for">Intended For</label>

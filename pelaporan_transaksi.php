@@ -1,10 +1,14 @@
 <?php
-include_once("config.php");
-$insert = mysqli_query($conn, "SELECT * FROM laporangood_receipt ORDER BY id DESC");
+// include_once("config.php");
+// $insert = mysqli_query($conn, "SELECT * FROM laporangood_receipt ORDER BY id DESC");
 
 $url = file_get_contents('https://warehouse-tubeseai.herokuapp.com/history_masuk');
 $data = json_decode($url, true);
 
+$url1 = file_get_contents('https://pronabil.herokuapp.com/transactions/history');
+$data1 = json_decode($url1, true);
+
+// var_dump($data1);
 ?>
 
 <!DOCTYPE html>
@@ -91,18 +95,15 @@ body {
 <h2 align="center">PELAPORAN TRANSAKSI PEMBELIAN MATERIAL</h2>
 <br><br>
 
-<table class="table table-hover table-bordered" >
+<div class="row">
+  <div class="col-sm-6">
+  <table class="table table-hover table-bordered" >
   <thead>
   <tr align="center">
   <th scope="col" colspan="4">Laporan Verifikasi Barang Masuk</th>
-  <th scope="col" colspan="4">Laporan History Pembelian</th>
   </tr>
     <tr>
-      <th scope="col">No</th>
-      <th scope="col">Tanggal</th>
-      <th scope="col">Nama Barang</th>
-      <th scope="col">Ammount</th>
-    
+      <th scope="col">No</th>    
       <th scope="col">Tanggal</th>
       <th scope="col">Id Barang</th>
       <th scope="col">Jumlah</th>
@@ -110,21 +111,61 @@ body {
   </thead>
   <tbody>
   <?php
-    while($user_data = mysqli_fetch_array($insert)) { 
-        echo "<tr>";
-        echo "<td>";
-        echo "<td>".$user_data['tanggal']."</td>";
-        echo "<td>".$user_data['nama']."</td>";
-        echo "<td>".$user_data['ammount']."</td>";
+    $no = 1;
+    foreach($data as $key => $value) { 
+      echo "<tr>";
+      $d=strtotime($value['date']);
+      echo "<td>".$no++."</td>";
+      echo "<td>".date("Y-m-d", $d)."</td>";
+      echo "<td>".$value['id_barang']."</td>";
+      echo "<td>".$value['jumlah']."</td>";
+      echo "</tr>";
     }
+    ?>    
+  </tbody>
+</table>
+  </div>
+  <div class="col-sm-6">
+  <table class="table table-hover table-bordered" >
+  <thead>
+  <tr align="center">
+  <th scope="col" colspan="5">Laporan History Pembelian</th>
+  </tr>
+    <tr>
+      <th scope="col">No</th>    
+      <th scope="col">Code</th>
+      <th scope="col">Nama</th>
+      <th scope="col">Jumlah</th>
+      <th scope="col">Status</th>
+    </tr>
+  </thead>
+  <tbody>
+  <?php
+    $no = 1;
+    foreach($data1['data'] as $key => $value) { 
+        echo "<tr>";
+        echo "<td>".$no++."</td>";
+        echo "<td>".$value['code']."</td>";
+        echo "<td>".$value['name']."</td>";
+        echo "<td>".$value['amount']."</td>";
+        echo "<td>".$value['status']."</td>";
+        echo "</tr>";
+
+    }
+  //   foreach($data as $key => $value) { 
+  //     echo "<tr>";
+  //     echo "<td>".$no++."</td>";
+  //     echo "<td>".$value['date']."</td>";
+  //     echo "<td>".$value['id_barang']."</td>";
+  //     echo "<td>".$value['jumlah']."</td>";
+  // }
     ?>
-    
-    <td><?= $data[0]['date']; ?></td>
-    <td><?= $data[0]['id_barang']; ?></td>
-    <td><?= $data[0]['jumlah']; ?></td>
     
   </tbody>
 </table>
+  </div>
+</div>
+
 
 
 <script>
